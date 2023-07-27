@@ -12,6 +12,7 @@ def send(content: str, user: str, room: str, email: str):
         user (str): Sender's name.
         room (str): Room's name.
         email (str): Sender's email.
+        
     """
     if not is_user_allowed_in_room(room, email, user):
         raise_not_authorized_error()
