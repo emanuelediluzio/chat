@@ -25,7 +25,7 @@ export default class ChatRoom {
 
     this.avatar_html = get_avatar_html(
       this.profile.room_type,
-      this.profile.opposite_person_email,
+      this.profile.opposite_person_cell,
       this.profile.room_name
     );
 

@@ -6,7 +6,7 @@
  "engine": "InnoDB",
  "field_order": [
   "sender",
-  "sender_email",
+  "sender_cell",
   "room",
   "content"
  ],
@@ -27,10 +27,10 @@
    "reqd": 1
   },
   {
-   "fieldname": "sender_email",
+   "fieldname": "sender_cell",
    "fieldtype": "Data",
-   "label": "Sender Email",
-   "options": "Email",
+   "label": "Sender cell",
+   "options": "cell",
    "reqd": 1
   },
   {
@@ -53,7 +53,7 @@
   {
    "create": 1,
    "delete": 1,
-   "email": 1,
+   "cell": 1,
    "export": 1,
    "print": 1,
    "read": 1,

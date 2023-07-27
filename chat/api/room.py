@@ -6,11 +6,11 @@ from typing import List, Dict
 
 
 @frappe.whitelist()
-def get(email: str) -> List[Dict]:
+def get(cell: str) -> List[Dict]:
     """Get all the rooms for a user
 
     Args:
-        email (str): Email of user requests all rooms
+        cell (str): cell of user requests all rooms
 
     """
     room_doctype = frappe.qb.DocType('Chat Room')
@@ -18,7 +18,7 @@ def get(email: str) -> List[Dict]:
     all_rooms = (
         frappe.qb.from_(room_doctype)
         .select('name', 'modified', 'last_message', 'is_read', 'room_name', 'members', 'type')
-        .where((room_doctype.type.like('Guest') | room_doctype.members.like(f'%{email}%')))
+        .where((room_doctype.type.like('Guest') | room_doctype.members.like(f'%{cell}%')))
 
     ).run(as_dict=True)
 
@@ -28,15 +28,15 @@ def get(email: str) -> List[Dict]:
         if room['type'] == 'Direct':
             members = room['members'].split(', ')
             room['room_name'] = get_full_name(
-                members[0]) if email == members[1] else get_full_name(members[1])
-            room['opposite_person_email'] = members[0] if members[1] == email else members[1]
+                members[0]) if cell == members[1] else get_full_name(members[1])
+            room['opposite_person_cell'] = members[0] if members[1] == cell else members[1]
         if room['type'] == 'Guest':
             users = frappe.get_cached_doc("Chat Room", room['name']).users
             if not users:
                 users = frappe.get_cached_doc('Chat Settings').chat_operators
-            if email not in [u.user for u in users]:
+            if cell not in [u.user for u in users]:
                 continue
-        room['is_read'] = 1 if room['is_read'] and email in room['is_read'] else 0
+        room['is_read'] = 1 if room['is_read'] and cell in room['is_read'] else 0
         user_rooms.append(room)
 
     user_rooms.sort(key=lambda room: comparator(room))
@@ -80,7 +80,7 @@ def create_private(room_name, users, type):
 
     if type == "Direct":
         profile["member_names"] = [
-            {"name": get_full_name(u), "email": u} for u in users
+            {"name": get_full_name(u), "cell": u} for u in users
         ]
 
     for user in users:

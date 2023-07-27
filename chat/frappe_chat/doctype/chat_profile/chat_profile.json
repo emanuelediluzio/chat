@@ -1,24 +1,24 @@
 {
  "actions": [],
- "autoname": "field:email",
+ "autoname": "field:cell",
  "creation": "2021-07-14 14:11:22.811197",
  "description": "Guest users for chat rooms.",
  "doctype": "DocType",
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
-  "email",
+  "cell",
   "guest_name",
   "token",
   "ip_address"
  ],
  "fields": [
   {
-   "fieldname": "email",
+   "fieldname": "cell",
    "fieldtype": "Data",
    "in_list_view": 1,
-   "label": "Email",
-   "options": "Email",
+   "label": "cell",
+   "options": "cell",
    "reqd": 1,
    "unique": 1
   },
@@ -59,7 +59,7 @@
   {
    "create": 1,
    "delete": 1,
-   "email": 1,
+   "cell": 1,
    "export": 1,
    "print": 1,
    "read": 1,

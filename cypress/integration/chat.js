@@ -16,13 +16,13 @@ describe('Guest View', () => {
 
   it('Fill and submit form', () => {
     cy.get('#submit-form').click();
-    cy.get('.msgprint').should('contain.text', 'Invalid email address');
+    cy.get('.msgprint').should('contain.text', 'Invalid cell address');
 
     cy.hide_modal_messages();
 
     cy.get('#chat-fullname').type('Dohn Joe').should('have.value', 'Dohn Joe');
 
-    cy.get('#chat-email')
+    cy.get('#chat-cell')
       .type('dohnjoe@gmail.com')
       .should('have.value', 'dohnjoe@gmail.com');
 

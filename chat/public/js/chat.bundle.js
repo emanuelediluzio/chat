@@ -82,7 +82,7 @@ frappe.Chat = class {
         this.chat_list = new ChatList({
           $wrapper: this.$chat_container,
           user: res.user,
-          user_email: res.user_email,
+          user_cell: res.user_cell,
           is_admin: res.is_admin,
         });
         this.chat_list.render();
@@ -95,7 +95,7 @@ frappe.Chat = class {
             room: res.room,
             is_admin: res.is_admin,
             user: res.user,
-            user_email: res.user_email,
+            user_cell: res.user_cell,
           },
         });
       } else {

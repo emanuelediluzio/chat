@@ -1,20 +1,19 @@
 import frappe
 from frappe import _
 from chat.utils import update_room, is_user_allowed_in_room, raise_not_authorized_error
-
+from frappe_whatsapp.frappe_whatsapp.doctype.whatsapp_message.whatsapp_message import send_message, notify, notifyAll
 
 @frappe.whitelist(allow_guest=True)
-def send(content: str, user: str, room: str, email: str):
-    """Send the message via socketio
+def send(content: str, user: str, room: str, cell: str):
+    """Send the message via Whatsapp Business API
 
     Args:
         content (str): Message to be sent.
         user (str): Sender's name.
         room (str): Room's name.
-        email (str): Sender's email.
-        
+        cell(str): Sender's cell number.
     """
-    if not is_user_allowed_in_room(room, email, user):
+    if not is_user_allowed_in_room(room, cell, user):
         raise_not_authorized_error()
 
     new_message = frappe.get_doc(
@@ -23,7 +22,7 @@ def send(content: str, user: str, room: str, email: str):
             "content": content,
             "sender": user,
             "room": room,
-            "sender_email": email,
+            "sender_cell": cell
         }
     ).insert(ignore_permissions=True)
 
@@ -34,7 +33,7 @@ def send(content: str, user: str, room: str, email: str):
         "user": user,
         "creation": new_message.creation,
         "room": room,
-        "sender_email": email,
+        "sender_cell": cell
     }
     typing_data = {
         "room": room,
@@ -58,14 +57,14 @@ def send(content: str, user: str, room: str, email: str):
 
 
 @frappe.whitelist(allow_guest=True)
-def get_all(room: str, email: str):
+def get_all(room: str, cell str):
     """Get all the messages of a particular room
 
     Args:
         room (str): Room's name.
 
     """
-    if not is_user_allowed_in_room(room, email):
+    if not is_user_allowed_in_room(room, cell):
         raise_not_authorized_error()
 
     return frappe.get_all(
@@ -73,7 +72,7 @@ def get_all(room: str, email: str):
         filters={
             "room": room,
         },
-        fields=["content", "sender", "creation", "sender_email"],
+        fields=["content", "sender", "creation", "sender_cell"],
         order_by="creation asc",
     )
 

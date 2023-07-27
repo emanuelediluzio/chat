@@ -10,7 +10,7 @@
 //
 //
 // -- This is a parent command --
-// Cypress.Commands.add('login', (email, password) => { ... })
+// Cypress.Commands.add('login', (cell, password) => { ... })
 //
 //
 // -- This is a child command --
@@ -39,7 +39,7 @@ Cypress.Commands.add('send_message', (message, room) => {
           content: message,
           user: 'Administrator',
           room: room,
-          email: 'Administrator',
+          cell: 'Administrator',
         },
       });
     });

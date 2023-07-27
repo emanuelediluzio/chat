@@ -1,6 +1,6 @@
 import frappe
 from frappe import _
-from frappe.utils import validate_email_address
+from frappe.utils import validate_cell_address
 from typing import Tuple, Dict
 from functools import wraps
 
@@ -12,25 +12,25 @@ def validate_room_kwargs(function):
             frappe.throw(title="Error", msg=_("Full Name is required"))
         if not kwargs["message"]:
             frappe.throw(title="Error", msg=_("Message is too short"))
-        validate_email_address(kwargs["email"], throw=True)
+        validate_cell_address(kwargs["cell"], throw=True)
         return function(**kwargs)
 
     return _validator
 
 
-def generate_guest_room(email: str, full_name: str, message: str) -> Tuple[str, str]:
+def generate_guest_room(cell: str, full_name: str, message: str) -> Tuple[str, str]:
     chat_operators = frappe.get_cached_doc("Chat Settings").chat_operators or []
     profile_doc = frappe.get_doc(
         {
             "doctype": "Chat Profile",
-            "email": email,
+            "cell": cell,
             "guest_name": full_name,
         }
     ).insert(ignore_permissions=True)
     new_room = frappe.get_doc(
         {
             "doctype": "Chat Room",
-            "guest": email,
+            "guest": cell,
             "room_name": full_name,
             "members": "Guest",
             "type": "Guest",
@@ -61,25 +61,25 @@ def generate_guest_room(email: str, full_name: str, message: str) -> Tuple[str, 
 
 @frappe.whitelist(allow_guest=True)
 @validate_room_kwargs
-def get_guest_room(*, email: str, full_name: str, message: str) -> Dict[str, str]:
+def get_guest_room(*, cell: str, full_name: str, message: str) -> Dict[str, str]:
     """Validate and setup profile & room for the guest user
 
     Args:
-        email (str): Email of guest.
+        cell (str): cell of guest.
         full_name (str): Full name of guest.
         message (str): Message to be dropped.
     """
-    if not frappe.db.exists("Chat Profile", email):
-        room, token = generate_guest_room(email, full_name, message)
+    if not frappe.db.exists("Chat Profile", cell):
+        room, token = generate_guest_room(cell, full_name, message)
 
     else:
-        room = frappe.db.get_value("Chat Room", {"guest": email}, "name")
-        token = frappe.db.get_value("Chat Profile", email, "token")
+        room = frappe.db.get_value("Chat Room", {"guest": cell}, "name")
+        token = frappe.db.get_value("Chat Profile", cell, "token")
 
     return {
         "guest_name": "Guest",
         "room_type": "Guest",
-        "email": email,
+        "cell": cell,
         "room_name": full_name,
         "message": message,
         "room": room,

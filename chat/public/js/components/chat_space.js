@@ -31,7 +31,7 @@ export default class ChatSpace {
   setup_header() {
     this.avatar_html = get_avatar_html(
       this.profile.room_type,
-      this.profile.opposite_person_email,
+      this.profile.opposite_person_cell,
       this.profile.room_name
     );
     const header_html = `
@@ -60,7 +60,7 @@ export default class ChatSpace {
     try {
       const res = await get_messages(
         this.profile.room,
-        this.profile.user_email
+        this.profile.user_cell
       );
       this.setup_messages(res);
       this.setup_actions();
@@ -92,7 +92,7 @@ export default class ChatSpace {
         this.profile.message.content,
         this.profile.user,
         this.profile.room,
-        this.profile.user_email
+        this.profile.user_cell
       );
     }
     messages_list.forEach((element) => {
@@ -101,7 +101,7 @@ export default class ChatSpace {
 
       let message_type = 'sender';
 
-      if (element.sender_email === this.profile.user_email) {
+      if (element.sender_cell === this.profile.user_cell) {
         message_type = 'recipient';
       } else if (this.profile.room_type === 'Guest') {
         if (this.profile.is_admin === true && element.sender !== 'Guest') {
@@ -271,7 +271,7 @@ export default class ChatSpace {
           me.typing = true;
           set_typing(
             me.profile.room,
-            me.profile.user_email,
+            me.profile.user_cell,
             me.typing,
             !me.profile.is_admin
           );
@@ -299,7 +299,7 @@ export default class ChatSpace {
   }
 
   get_typing_changes(res) {
-    if (res.user != this.profile.user_email) {
+    if (res.user != this.profile.user_cell) {
       if (
         (this.profile.is_admin === true && res.is_guest === 'true') ||
         this.profile.is_admin === false ||
@@ -403,13 +403,13 @@ export default class ChatSpace {
       content,
       this.profile.user,
       this.profile.room,
-      this.profile.user_email
+      this.profile.user_cell
     );
   }
 
   receive_message(res, time) {
     let chat_type = 'sender';
-    if (res.sender_email === this.profile.user_email) {
+    if (res.sender_cell === this.profile.user_cell) {
       return;
     }
 

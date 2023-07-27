@@ -43,9 +43,9 @@ export default class ChatForm {
 							placeholder='${__('Please enter your full name')}'>
 					</div>
 					<div class='form-group'>
-						<label class='form-label'>${__('Email Address')}</label>
-						<input type='email' class='form-control' id='chat-email' 
-							placeholder='${__('Please enter your email')}'>
+						<label class='form-label'>${__('cell Address')}</label>
+						<input type='cell' class='form-control' id='chat-cell' 
+							placeholder='${__('Please enter your cell')}'>
 					</div>
 					<div class='form-group'>
 						<label class='form-label'>${__('Message')}</label>
@@ -69,7 +69,7 @@ export default class ChatForm {
 
   get_values() {
     const result = {
-      email: $('#chat-email').val(),
+      cell: $('#chat-cell').val(),
       full_name: $('#chat-fullname').val(),
       message: $('#chat-message-area').val(),
     };
@@ -88,7 +88,7 @@ export default class ChatForm {
         content: form_values.message,
         creation: new Date(),
         sender: res.guest_name,
-        sender_email: res.email,
+        sender_cell: res.cell,
       };
       localStorage.setItem('guest_token', res.token);
 
@@ -97,7 +97,7 @@ export default class ChatForm {
         room: res.room,
         is_admin: this.profile.is_admin,
         user: res.guest_name,
-        user_email: res.email,
+        user_cell: res.cell,
         message: query_message,
         room_type: res.room_type,
       };

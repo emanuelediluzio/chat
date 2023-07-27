@@ -45,29 +45,29 @@ function is_image(filename) {
   return true;
 }
 
-async function get_rooms(email) {
+async function get_rooms(cell) {
   const res = await frappe.call({
     type: 'GET',
     method: 'chat.api.room.get',
     args: {
-      email: email,
+      cell: cell,
     },
   });
   return await res.message;
 }
 
-async function get_messages(room, email) {
+async function get_messages(room, cell) {
   const res = await frappe.call({
     method: 'chat.api.message.get_all',
     args: {
       room: room,
-      email: email,
+      cell: cell,
     },
   });
   return await res.message;
 }
 
-async function send_message(content, user, room, email) {
+async function send_message(content, user, room, cell) {
   try {
     await frappe.call({
       method: 'chat.api.message.send',
@@ -75,7 +75,7 @@ async function send_message(content, user, room, email) {
         content: content,
         user: user,
         room: room,
-        email: email,
+        cell: cell,
       },
     });
   } catch (error) {
@@ -111,11 +111,11 @@ async function mark_message_read(room) {
 }
 
 
-async function create_guest({ email, full_name, message }) {
+async function create_guest({ cell, full_name, message }) {
   const res = await frappe.call({
     method: 'chat.api.user.get_guest_room',
     args: {
-      email: email,
+      cell: cell,
       full_name: full_name,
       message: message,
     },
@@ -159,10 +159,10 @@ async function set_user_settings(settings) {
   });
 }
 
-function get_avatar_html(room_type, user_email, room_name) {
+function get_avatar_html(room_type, user_cell, room_name) {
   let avatar_html;
   if (room_type === 'Direct' && 'desk' in frappe) {
-    avatar_html = frappe.avatar(user_email, 'avatar-medium');
+    avatar_html = frappe.avatar(user_cell, 'avatar-medium');
   } else {
     avatar_html = frappe.get_avatar('avatar-medium', room_name);
   }

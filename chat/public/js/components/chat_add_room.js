@@ -3,10 +3,10 @@ import { create_private_room } from './chat_utils';
 export default class ChatAddRoom {
   constructor(opts) {
     this.user = opts.user;
-    this.users_list = [...frappe.user.get_emails(), 'Administrator'];
-    this.user_email = opts.user_email;
+    this.users_list = [...frappe.user.get_cells(), 'Administrator'];
+    this.user_cell = opts.user_cell;
     this.users_list = this.users_list.filter(function (user) {
-      return user != opts.user_email;
+      return user != opts.user_cell;
     });
     this.setup();
   }

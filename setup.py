@@ -11,7 +11,7 @@ setup(
     version=version,
     description='Chat application for frappe',
     author='Frappe Technologies Pvt. Ltd.',
-    author_email='hello@frappe.io',
+    author_cell='hello@frappe.io',
     packages=find_packages(),
     zip_safe=False,
     include_package_data=True,

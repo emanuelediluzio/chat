@@ -32,17 +32,17 @@ def migrate_rooms():
             room_doc.members = ', '.join([item['user'] for item in room_users])
         elif room_users:
             room_doc.type = 'Guest'
-            guest_email = room_users[0]['user']
-            guest_name = get_full_name(guest_email)
+            guest_cell = room_users[0]['user']
+            guest_name = get_full_name(guest_cell)
 
             guest_doc = frappe.get_doc({
                 'doctype': 'Chat Profile',
-                'email': guest_email,
+                'cell': guest_cell,
                 'guest_name': guest_name,
             })
             guest_doc.insert(ignore_mandatory=True)
             room_doc.members = 'Guest'
-            room_doc.guest = guest_email
+            room_doc.guest = guest_cell
             room_doc.room_name = guest_name
         room_doc.save()
 
@@ -61,5 +61,5 @@ def migrate_messages():
             message_doc.sender = 'Guest' if room['type'] == 'Guest' else get_full_name(
                 message_item['owner'])
 
-            message_doc.sender_email = message_item['owner']
+            message_doc.sender_cell = message_item['owner']
             message_doc.save()

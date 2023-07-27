@@ -7,7 +7,7 @@ export default class ChatList {
   constructor(opts) {
     this.$wrapper = opts.$wrapper;
     this.user = opts.user;
-    this.user_email = opts.user_email;
+    this.user_cell = opts.user_cell;
     this.is_admin = opts.is_admin;
     this.setup();
   }
@@ -59,7 +59,7 @@ export default class ChatList {
 
   async fetch_and_setup_rooms() {
     try {
-      const res = await get_rooms(this.user_email);
+      const res = await get_rooms(this.user_cell);
       this.rooms = res;
       this.setup_rooms();
       this.render_messages();
@@ -79,7 +79,7 @@ export default class ChatList {
     this.rooms.forEach((element) => {
       let profile = {
         user: this.user,
-        user_email: this.user_email,
+        user_cell: this.user_cell,
         last_message: element.last_message,
         last_date: element.modified,
         is_admin: this.is_admin,
@@ -87,7 +87,7 @@ export default class ChatList {
         is_read: element.is_read,
         room_name: element.room_name,
         room_type: element.type,
-        opposite_person_email: element.opposite_person_email,
+        opposite_person_cell: element.opposite_person_cell,
       };
 
       this.chat_rooms.push([
@@ -137,7 +137,7 @@ export default class ChatList {
       if (typeof me.chat_add_room_modal === 'undefined') {
         me.chat_add_room_modal = new ChatAddRoom({
           user: me.user,
-          user_email: me.user_email,
+          user_cell: me.user_cell,
         });
       }
       me.chat_add_room_modal.show();
@@ -215,7 +215,7 @@ export default class ChatList {
 
       res.user = me.user;
       res.is_admin = me.is_admin;
-      res.user_email = me.user_email;
+      res.user_cell = me.user_cell;
       me.create_new_room(res);
     });
 
@@ -227,22 +227,22 @@ export default class ChatList {
         frappe.utils.play_sound('chat-notification');
       }
 
-      if (res.members.includes(me.user_email)) {
+      if (res.members.includes(me.user_cell)) {
         if (res.room_type === 'Direct') {
           res.room_name =
-            res.member_names[0]['email'] == me.user_email
+            res.member_names[0]['cell'] == me.user_cell
               ? res.member_names[1]['name']
               : res.member_names[0]['name'];
 
-          res.opposite_person_email =
-            res.member_names[0]['email'] == me.user_email
-              ? res.member_names[1]['email']
-              : res.member_names[0]['email'];
+          res.opposite_person_cell =
+            res.member_names[0]['cell'] == me.user_cell
+              ? res.member_names[1]['cell']
+              : res.member_names[0]['cell'];
         }
 
         res.user = me.user;
         res.is_admin = me.is_admin;
-        res.user_email = me.user_email;
+        res.user_cell = me.user_cell;
         me.create_new_room(res);
       }
     });
