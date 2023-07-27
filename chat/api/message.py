@@ -1,18 +1,33 @@
+import json
 import frappe
+import time
 from frappe import _
 from chat.utils import update_room, is_user_allowed_in_room, raise_not_authorized_error
-from frappe_whatsapp.frappe_whatsapp.doctype.whatsapp_message.whatsapp_message import send_message, notify, notifyAll
+from frappe.model.document import Document
+from frappe.integrations.utils import make_post_request
+
+        
 
 @frappe.whitelist(allow_guest=True)
-def send(content: str, user: str, room: str, cell: str):
+def send(content: str, user: str, room: str):
     """Send the message via Whatsapp Business API
 
     Args:
         content (str): Message to be sent.
         user (str): Sender's name.
         room (str): Room's name.
-        cell(str): Sender's cell number.
     """
+
+    if self.type == 'Outgoing' and self.message_type != 'Template':
+            if self.attach and not self.attach.startswith("http"):
+                link = frappe.utils.get_url() + '/' + self.attach
+            else:
+                link = self.attach
+
+    mobile_no = frappe.db.get_value("Customer", filters={"customer_name": user}, fieldname="mobile_no")
+                if mobile_no:
+                    self.send_message(mobile_no, link)
+
     if not is_user_allowed_in_room(room, cell, user):
         raise_not_authorized_error()
 
